@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信自动化运营方案 | 墨飞科技</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0d4f5c;
+            --accent: #07b53a;
+            --accent-light: #10c74e;
+            --dark: #0a3a45;
+            --light: #f0f7f9;
+            --gray: #5a7a85;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', '微软雅黑', sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide-container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Slide Header */
+        .slide-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: var(--white);
+            padding: 35px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(7, 181, 58, 0.1);
+            border-radius: 50%;
+        }
+
+        .slide-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide-header .page-num {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Slide Content */
+        .slide-content {
+            flex: 1;
+            padding: 40px 50px;
+            background: var(--white);
+            position: relative;
+        }
+
+        /* Cover Slide */
+        .slide-cover {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            color: var(--white);
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-cover::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: rgba(7, 181, 58, 0.15);
+            border-radius: 50%;
+        }
+
+        .slide-cover::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -100px;
+            width: 350px;
+            height: 350px;
+            background: rgba(7, 181, 58, 0.1);
+            border-radius: 50%;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-logo {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 36px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(7, 181, 58, 0.3);
+        }
+
+        .slide-cover h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .slide-cover .subtitle {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .slide-cover .company {
+            font-size: 20px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            margin-top: 40px;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(13, 79, 92, 0.15);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .card-icon.accent {
+            background: var(--accent);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Pain Points */
+        .pain-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .pain-point .icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .pain-point h3 {
+            color: #c0392b;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .pain-point p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Solution Overview */
+        .solution-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+            border-radius: 16px;
+            padding: 35px;
+            color: var(--white);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .solution-box h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .solution-box p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .feature-item .check {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .feature-item span {
+            font-size: 15px;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Core Functions */
+        .function-card {
+            background: var(--white);
+            border: 2px solid var(--light);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .function-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(7, 181, 58, 0.15);
+        }
+
+        .function-card .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: white;
+        }
+
+        .function-card h3 {
+            color: var(--primary);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .function-card p {
+            color: var(--gray);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 18px 20px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .comparison-table th:last-child {
+            background: var(--accent);
+        }
+
+        .comparison-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .comparison-table .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .comparison-table .na {
+            color: #e74c3c;
+        }
+
+        /* Case Study */
+        .case-study {
+            background: var(--light);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .case-header h3 {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .case-header .badge {
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .case-comparison {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .case-before, .case-after {
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .case-before {
+            background: #fff0f0;
+            border: 1px solid #ffccd0;
+        }
+
+        .case-after {
+            background: #e8f8ef;
+            border: 1px solid #b8e6ca;
+        }
+
+        .case-before h4 {
+            color: #c0392b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .case-after h4 {
+            color: var(--accent);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .case-before ul, .case-after ul {
+            list-style: none;
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .case-before li, .case-after li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .case-before li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+        }
+
+        .case-after li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        .arrow-icon {
+            font-size: 30px;
+            color: var(--primary);
+        }
+
+        /* Pricing Table */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .pricing-card {
+            background: var(--white);
+            border: 2px solid var(--light);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: '推荐';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .pricing-card h3 {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .pricing-card .price {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .pricing-card .price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--gray);
+        }
+
+        .pricing-card .desc {
+            color: var(--gray);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card ul {
+            list-style: none;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .pricing-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            color: var(--gray);
+        }
+
+        .pricing-card li::before {
+            content: '✓';
+            color: var(--accent);
+            margin-right: 10px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 12px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 25px;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        .timeline-item h4 {
+            color: var(--primary);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-item p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .timeline-item .days {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .contact-info {
+            padding: 30px;
+            background: var(--light);
+            border-radius: 16px;
+        }
+
+        .contact-info h3 {
+            color: var(--primary);
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-item .icon {
+            width: 45px;
+            height: 45px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .contact-item span {
+            font-size: 16px;
+            color: var(--gray);
+        }
+
+        .qr-code {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .qr-code .qr-placeholder {
+            width: 180px;
+            height: 180px;
+            background: var(--light);
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+
+        .qr-code p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        /* Navigation */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-arrow:hover {
+            background: var(--white);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.prev {
+            left: -80px;
+        }
+
+        .nav-arrow.next {
+            right: -80px;
+        }
+
+        .nav-arrow::before {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .nav-arrow.prev::before {
+            content: '‹';
+        }
+
+        .nav-arrow.next::before {
+            content: '›';
+        }
+
+        /* Page Indicator */
+        .page-indicator {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(13, 79, 92, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--accent);
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .keyboard-hint span {
+            padding: 5px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .presentation {
+                width: 100%;
+                height: auto;
+            }
+
+            .slide-container {
+                box-shadow: none;
+                width: 100%;
+                height: auto;
+            }
+
+            .slide {
+                position: relative;
+                opacity: 1;
+                visibility: visible;
+                page-break-after: always;
+                height: auto;
+                min-height: 540px;
+            }
+
+            .nav-arrow, .page-indicator, .keyboard-hint {
+                display: none;
+            }
+
+            .slide-cover, .slide-header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 14px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-item .label {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Benefits list */
+        .benefits-list {
+            list-style: none;
+        }
+
+        .benefits-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--gray);
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <div class="slide-container" id="slideContainer">
+            <!-- Slide 1: Cover -->
+            <div class="slide slide-cover active" data-slide="1">
+                <div class="cover-content">
+                    <div class="cover-logo">MF</div>
+                    <h1>微信自动化运营方案</h1>
+                    <p class="subtitle">企业微信智能营销解决方案</p>
+                    <div class="company">墨飞科技 | MOFEI Technology</div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Company Introduction -->
+            <div class="slide" data-slide="2">
+                <div class="slide-header">
+                    <h2>公司介绍</h2>
+                    <span class="page-num">02 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">About Us</p>
+                    <h3 style="font-size: 26px; color: var(--primary); margin-bottom: 30px;">墨飞科技专注企业微信解决方案</h3>
+
+                    <div class="grid-3">
+                        <div class="card">
+                            <div class="card-icon">5+</div>
+                            <h3>年行业深耕</h3>
+                            <p>深耕企业微信领域多年，积累了丰富的技术经验与行业洞察</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon accent">500+</div>
+                            <h3>企业客户</h3>
+                            <p>服务超过500家企业客户，覆盖电商、教育、金融等多个行业</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">99.9%</div>
+                            <h3>系统稳定</h3>
+                            <p>企业级稳定性保障，7x24小时不间断服务，数据安全可靠</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="number">50+</div>
+                            <div class="label">技术团队成员</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">1000万+</div>
+                            <div class="label">日均消息处理</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">30+</div>
+                            <div class="label">专利技术</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Pain Points -->
+            <div class="slide" data-slide="3">
+                <div class="slide-header">
+                    <h2>痛点分析</h2>
+                    <span class="page-num">03 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Pain Points</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 25px;">人工运营面临的挑战</h3>
+
+                    <div class="grid-2">
+                        <div>
+                            <div class="pain-point">
+                                <div class="icon">⏰</div>
+                                <div>
+                                    <h3>效率低下</h3>
+                                    <p>人工回复慢，客户等待时间长，满意度下降，流失率高</p>
+                                </div>
+                            </div>
+                            <div class="pain-point">
+                                <div class="icon">👥</div>
+                                <div>
+                                    <h3>客户流失</h3>
+                                    <p>无法及时跟进，潜在客户流失，营销机会白白错过</p>
+                                </div>
+                            </div>
+                            <div class="pain-point">
+                                <div class="icon">📊</div>
+                                <div>
+                                    <h3>数据分散</h3>
+                                    <p>客户信息分散，无法统一管理，数据分析困难</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="pain-point">
+                                <div class="icon">🔄</div>
+                                <div>
+                                    <h3>重复劳动</h3>
+                                    <p>大量重复性工作占据人力，员工疲惫，工作积极性降低</p>
+                                </div>
+                            </div>
+                            <div class="pain-point">
+                                <div class="icon">🎯</div>
+                                <div>
+                                    <h3>精准度低</h3>
+                                    <p>人工筛选客户，精准度不足，营销效果差，转化率低</p>
+                                </div>
+                            </div>
+                            <div class="pain-point">
+                                <div class="icon">💰</div>
+                                <div>
+                                    <h3>成本高昂</h3>
+                                    <p>人力成本逐年上涨，培训周期长，管理难度大</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Solution Overview -->
+            <div class="slide" data-slide="4">
+                <div class="slide-header">
+                    <h2>解决方案概述</h2>
+                    <span class="page-num">04 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Solution Overview</p>
+
+                    <div class="solution-box">
+                        <h3>企业微信官方API方案</h3>
+                        <p>基于企业微信开放接口，实现自动化运营管理，全方位提升营销效率</p>
+                    </div>
+
+                    <h3 style="font-size: 18px; color: var(--primary); margin-bottom: 20px;">核心优势</h3>
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>官方API接口，稳定可靠</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>私有化部署，数据安全保障</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>智能化运营，释放人力</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>精准营销，提升转化率</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>实时数据分析，决策支持</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="check">✓</div>
+                            <span>7x24小时自动化运行</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Core Functions -->
+            <div class="slide" data-slide="5">
+                <div class="slide-header">
+                    <h2>核心功能展示</h2>
+                    <span class="page-num">05 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Core Features</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 30px;">四大核心功能模块</h3>
+
+                    <div class="grid-4">
+                        <div class="function-card">
+                            <div class="icon">👤</div>
+                            <h3>自动加好友</h3>
+                            <p>智能筛选目标客户，自动发送好友申请，支持多账号并行操作</p>
+                        </div>
+                        <div class="function-card">
+                            <div class="icon">💬</div>
+                            <h3>自动回复</h3>
+                            <p>关键词触发智能回复，支持知识库配置，秒回客户咨询</p>
+                        </div>
+                        <div class="function-card">
+                            <div class="icon">📢</div>
+                            <h3>定时群发</h3>
+                            <p>精准定时发送，支持个性化内容配置，提高营销效率</p>
+                        </div>
+                        <div class="function-card">
+                            <div class="icon">🤖</div>
+                            <h3>智能助手</h3>
+                            <p>AI驱动的客户跟进，自动标签管理，智能销售预测</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-row" style="margin-top: 40px;">
+                        <div class="stat-item">
+                            <div class="number">80%</div>
+                            <div class="label">人力节省</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">3倍</div>
+                            <div class="label">效率提升</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">60%</div>
+                            <div class="label">成本降低</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Comparison -->
+            <div class="slide" data-slide="6">
+                <div class="slide-header">
+                    <h2>方案对比</h2>
+                    <span class="page-num">06 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Comparison</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 25px;">为什么选择我们</h3>
+
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>对比项</th>
+                                <th>其他方案</th>
+                                <th>墨飞科技方案</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>接口稳定性</td>
+                                <td class="na">不稳定，易封号</td>
+                                <td class="highlight">官方API，稳如磐石</td>
+                            </tr>
+                            <tr>
+                                <td>数据安全</td>
+                                <td class="na">数据上传第三方</td>
+                                <td class="highlight">私有化部署，自主可控</td>
+                            </tr>
+                            <tr>
+                                <td>响应速度</td>
+                                <td class="na">延迟高，不可靠</td>
+                                <td class="highlight">毫秒级响应</td>
+                            </tr>
+                            <tr>
+                                <td>功能定制</td>
+                                <td class="na">功能固定，无法扩展</td>
+                                <td class="highlight">灵活定制，满足需求</td>
+                            </tr>
+                            <tr>
+                                <td>售后服务</td>
+                                <td class="na">无专业支持</td>
+                                <td class="highlight">7x24专属技术支持</td>
+                            </tr>
+                            <tr>
+                                <td>价格透明度</td>
+                                <td class="na">隐藏收费</td>
+                                <td class="highlight">透明定价，无后顾之忧</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Slide 7: Case Study -->
+            <div class="slide" data-slide="7">
+                <div class="slide-header">
+                    <h2>成功案例</h2>
+                    <span class="page-num">07 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Case Study</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 25px;">某大连企业使用前后对比</h3>
+
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>大连某电商公司</h3>
+                            <span class="badge">月业绩提升 150%</span>
+                        </div>
+
+                        <div class="case-comparison">
+                            <div class="case-before">
+                                <h4>使用前</h4>
+                                <ul>
+                                    <li>日均处理咨询 200+</li>
+                                    <li>回复平均响应时间 30分钟</li>
+                                    <li>客户流失率 45%</li>
+                                    <li>员工每天加班 3小时</li>
+                                    <li>月营销成本 8万元</li>
+                                </ul>
+                            </div>
+                            <div class="arrow-icon">→</div>
+                            <div class="case-after">
+                                <h4>使用后</h4>
+                                <ul>
+                                    <li>日均处理咨询 800+</li>
+                                    <li>回复平均响应时间 30秒</li>
+                                    <li>客户流失率降至 12%</li>
+                                    <li>员工准时下班</li>
+                                    <li>月营销成本 3万元</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <div class="number">150%</div>
+                            <div class="label">业绩提升</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">60%</div>
+                            <div class="label">成本节省</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">97%</div>
+                            <div class="label">客户满意度</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 8: Pricing -->
+            <div class="slide" data-slide="8">
+                <div class="slide-header">
+                    <h2>报价方案</h2>
+                    <span class="page-num">08 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Pricing</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 25px;">阶梯报价表</h3>
+
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h3>基础版</h3>
+                            <div class="price">¥9,800<span>/年</span></div>
+                            <p class="desc">适合小型企业</p>
+                            <ul>
+                                <li>1个企业微信号</li>
+                                <li>日添加好友 100上限</li>
+                                <li>基础自动回复</li>
+                                <li>定时群发功能</li>
+                                <li>基础数据统计</li>
+                                <li>邮箱支持</li>
+                            </ul>
+                        </div>
+                        <div class="pricing-card featured">
+                            <h3>专业版</h3>
+                            <div class="price">¥19,800<span>/年</span></div>
+                            <p class="desc">适合中型企业</p>
+                            <ul>
+                                <li>3个企业微信号</li>
+                                <li>日添加好友 500上限</li>
+                                <li>智能自动回复</li>
+                                <li>高级群发管理</li>
+                                <li>完整数据分析</li>
+                                <li>7x12小时支持</li>
+                            </ul>
+                        </div>
+                        <div class="pricing-card">
+                            <h3>旗舰版</h3>
+                            <div class="price">¥39,800<span>/年</span></div>
+                            <p class="desc">适合大型企业</p>
+                            <ul>
+                                <li>无限微信号</li>
+                                <li>无添加好友上限</li>
+                                <li>AI智能助手</li>
+                                <li>定制开发服务</li>
+                                <li>私有化部署</li>
+                                <li>7x24专属支持</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 9: Implementation Plan -->
+            <div class="slide" data-slide="9">
+                <div class="slide-header">
+                    <h2>实施计划</h2>
+                    <span class="page-num">09 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Implementation Plan</p>
+                    <h3 style="font-size: 22px; color: var(--primary); margin-bottom: 30px;">交付周期 15-21 天</h3>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <span class="days">Day 1-2</span>
+                            <h4>需求调研与方案确认</h4>
+                            <p>深入了解企业现状，明确业务需求，制定个性化解决方案</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="days">Day 3-7</span>
+                            <h4>系统开发与配置</h4>
+                            <p>完成系统定制开发，配置自动化流程，进行内部测试</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="days">Day 8-10</span>
+                            <h4>部署与培训</h4>
+                            <p>系统部署上线，对运营团队进行操作培训</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="days">Day 11-14</span>
+                            <h4>试运行与优化</h4>
+                            <p>跟踪运行效果，收集反馈，进行持续优化调整</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="days">Day 15-21</span>
+                            <h4>正式交付与售后服务</h4>
+                            <p>正式项目验收，提供完整售后技术支持与定期维护服务</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 10: Contact -->
+            <div class="slide" data-slide="10">
+                <div class="slide-header">
+                    <h2>联系我们</h2>
+                    <span class="page-num">10 / 10</span>
+                </div>
+                <div class="slide-content">
+                    <p class="section-title">Contact Us</p>
+                    <h3 style="font-size: 26px; color: var(--primary); margin-bottom: 30px;">开启智能营销新时代</h3>
+
+                    <div class="contact-grid">
+                        <div class="contact-info">
+                            <h3>联系方式</h3>
+                            <div class="contact-item">
+                                <div class="icon">🏢</div>
+                                <span>墨飞科技有限公司</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="icon">📍</div>
+                                <span>辽宁省大连市甘井子区高新园区</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="icon">📞</div>
+                                <span>400-888-8888</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="icon">✉️</div>
+                                <span>sales@mofei-tech.com</span>
+                            </div>
+                            <div class="contact-item">
+                                <div class="icon">🌐</div>
+                                <span>www.mofei-tech.com</span>
+                            </div>
+                        </div>
+
+                        <div class="qr-code">
+                            <div class="qr-placeholder">📱</div>
+                            <p>扫码关注公众号<br>获取更多资讯</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-row" style="margin-top: 40px;">
+                        <div class="stat-item">
+                            <div class="number">24h</div>
+                            <div class="label">快速响应</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">100%</div>
+                            <div class="label">客户满意度</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="number">3年</div>
+                            <div class="label">质保服务</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <div class="nav-arrow prev" onclick="prevSlide()"></div>
+            <div class="nav-arrow next" onclick="nextSlide()"></div>
+
+            <!-- Page Indicator -->
+            <div class="page-indicator" id="pageIndicator"></div>
+        </div>
+
+        <div class="keyboard-hint">
+            <span>← 左箭头</span>
+            <span>右箭头 →</span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function initPageIndicator() {
+            const indicator = document.getElementById('pageIndicator');
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (i === 1 ? ' active' : '');
+                dot.onclick = () => goToSlide(i);
+                indicator.appendChild(dot);
+            }
+        }
+
+        function updateSlide() {
+            const slides = document.querySelectorAll('.slide');
+            const dots = document.querySelectorAll('.dot');
+
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    dot.classList.add('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        initPageIndicator();
+    </script>
+</body>
+</html>

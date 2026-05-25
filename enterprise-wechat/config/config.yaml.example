@@ -1,0 +1,14 @@
+wechat:
+  corp_id: "YOUR_CORP_ID"
+  corp_secret: "YOUR_CORP_SECRET"
+  agent_id: "1000002"
+  callback_token: "YOUR_CALLBACK_TOKEN"
+  callback_aes_key: "YOUR_CALLBACK_AES_KEY"
+
+database:
+  url: "sqlite:///./wechat.db"
+
+app:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false

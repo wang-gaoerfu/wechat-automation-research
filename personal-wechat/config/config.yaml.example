@@ -1,0 +1,20 @@
+wcf:
+  host: "localhost"
+  port: 10086
+  reconnect_interval: 30
+  max_reconnect_attempts: 5
+
+anti_ban:
+  daily_message_limit: 500
+  min_send_interval: 3
+  rest_hours:
+    start: 2
+    end: 6
+
+database:
+  url: "sqlite:///./personal_wechat.db"
+
+app:
+  host: "0.0.0.0"
+  port: 8001
+  debug: false

@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信自动化运营方案</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Color Palette - Professional Teal + Warm Neutrals */
+            --primary: #0d4f5c;
+            --primary-light: #1a7f8e;
+            --primary-dark: #073a47;
+            --accent: #07b53a;
+            --accent-light: #25d366;
+            --warning: #e67e22;
+            --danger: #c0392b;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7f9fa;
+            --bg-tertiary: #edf2f7;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --border-light: #f0f4f8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.08);
+
+            /* Typography */
+            --font-display: 'Noto Serif SC', serif;
+            --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --space-3xl: 4rem;
+
+            /* Layout */
+            --max-width: 1200px;
+            --content-width: 800px;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Page Container */
+        .document {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Cover Section */
+        .cover {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--space-3xl);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(7, 181, 58, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .cover-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-lg);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 100px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xl);
+            backdrop-filter: blur(10px);
+        }
+
+        .cover-badge svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .cover-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+            margin-bottom: var(--space-lg);
+        }
+
+        .cover-subtitle {
+            font-size: 1.25rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .cover-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--space-xl);
+            padding-top: var(--space-2xl);
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin-top: var(--space-2xl);
+        }
+
+        .cover-meta-item {
+            text-align: center;
+        }
+
+        .cover-meta-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: var(--space-xs);
+        }
+
+        .cover-meta-value {
+            font-size: 0.9375rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+
+        /* WeChat Icon */
+        .wechat-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: var(--space-xl);
+            background: rgba(255,255,255,0.1);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .wechat-icon svg {
+            width: 48px;
+            height: 48px;
+            fill: #07b53a;
+        }
+
+        /* Content Sections */
+        .section {
+            padding: var(--space-3xl) var(--space-2xl);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-header {
+            max-width: var(--content-width);
+            margin: 0 auto var(--space-2xl);
+        }
+
+        .section-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: var(--space-md);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+        }
+
+        /* Value Cards */
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+            max-width: var(--content-width);
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-xl);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .value-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .value-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .value-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .value-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .value-text {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Feature Section */
+        .feature-intro {
+            max-width: var(--content-width);
+            margin: 0 auto var(--space-2xl);
+            text-align: center;
+            padding: var(--space-2xl);
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            border-radius: 24px;
+        }
+
+        .feature-intro h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .feature-intro p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Feature Tables */
+        .feature-table {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .feature-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .feature-table thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        }
+
+        .feature-table th {
+            padding: var(--space-lg) var(--space-xl);
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .feature-table td {
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9375rem;
+            vertical-align: top;
+        }
+
+        .feature-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .feature-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .feature-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .feature-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .feature-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-xs) var(--space-sm);
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+
+        .feature-tag.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            max-width: var(--content-width);
+            margin: var(--space-2xl) auto 0;
+            padding: var(--space-xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px;
+            color: #fff;
+        }
+
+        .highlight-box h3 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        .highlight-box ul {
+            list-style: none;
+        }
+
+        .highlight-box li {
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+        }
+
+        .highlight-box li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+        }
+
+        /* Risk Table */
+        .risk-table {
+            max-width: var(--content-width);
+            margin: 0 auto;
+        }
+
+        .risk-table table {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .risk-table th {
+            background: var(--danger);
+            padding: var(--space-lg);
+            text-align: left;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .risk-table td {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .risk-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .risk-name {
+            font-weight: 600;
+            color: var(--danger);
+        }
+
+        /* Comparison Section */
+        .comparison-table {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table thead {
+            background: var(--bg-tertiary);
+        }
+
+        .comparison-table th {
+            padding: var(--space-lg);
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .comparison-table td {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9375rem;
+        }
+
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .cross {
+            color: var(--danger);
+        }
+
+        .recommended {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .backup {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-xs) var(--space-sm);
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        /* FAQ Section */
+        .faq-list {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-xl);
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .faq-question {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+        }
+
+        .faq-question::before {
+            content: 'Q';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 6px;
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            padding-left: calc(24px + var(--space-sm));
+        }
+
+        .faq-answer p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .faq-answer ul {
+            margin: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+        }
+
+        .faq-answer li {
+            margin-bottom: var(--space-xs);
+        }
+
+        /* Service Section */
+        .service-grid {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-xl);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+        }
+
+        .service-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .service-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: #fff;
+            text-align: center;
+        }
+
+        .contact-section .section-title {
+            color: #fff;
+        }
+
+        .contact-section .section-desc {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .contact-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-xl);
+            background: #fff;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 100px;
+            text-decoration: none;
+            margin-top: var(--space-xl);
+            transition: all 0.3s;
+        }
+
+        .contact-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        .footer {
+            padding: var(--space-xl);
+            text-align: center;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .document {
+                box-shadow: none;
+            }
+
+            .cover {
+                min-height: auto;
+                padding: 60px;
+            }
+
+            .section {
+                padding: 40px;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cover {
+                padding: var(--space-2xl);
+            }
+
+            .section {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .feature-table th,
+            .feature-table td {
+                padding: var(--space-md);
+            }
+
+            .cover-meta {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <!-- Cover -->
+        <section class="cover">
+            <div class="cover-content">
+                <div class="wechat-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.5 11.5c-.5 0-1-.5-1-1s.5-1 1-1c2.5 0 4.5-2 4.5-4.5 0-.5.5-1 1-1s1 .5 1 1c0 3.5-3 6.5-6.5 6.5zm7 0c-.5 0-1-.5-1-1s.5-1 1-1c2.5 0 4.5-2 4.5-4.5 0-.5.5-1 1-1s1 .5 1 1c0 3.5-3 6.5-6.5 6.5zm-6.5 5c-1.5 0-3-1.5-3-3s1.5-3 3-3c.5 0 1 .5 1 1s-.5 1-1 1c-.5 0-1 .5-1 1s.5 1 1 1zm10 0c-.5 0-1-.5-1-1s.5-1 1-1c.5 0 1-.5 1-1s-.5-1-1-1c-1.5 0-3 1.5-3 3s1.5 3 3 3z"/>
+                    </svg>
+                </div>
+                <div class="cover-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    企业微信运营解决方案
+                </div>
+                <h1 class="cover-title">微信自动化运营方案</h1>
+                <p class="cover-subtitle">企业微信 · 个人微信 · 智能助手</p>
+                <div class="cover-meta">
+                    <div class="cover-meta-item">
+                        <div class="cover-meta-label">文档版本</div>
+                        <div class="cover-meta-value">v1.1</div>
+                    </div>
+                    <div class="cover-meta-item">
+                        <div class="cover-meta-label">编制日期</div>
+                        <div class="cover-meta-value">2026年5月25日</div>
+                    </div>
+                    <div class="cover-meta-item">
+                        <div class="cover-meta-label">目标读者</div>
+                        <div class="cover-meta-value">企业客户</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Overview -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">方案概述</h2>
+                <p class="section-desc">帮助企业高效管理微信客户，实现自动化运营</p>
+            </div>
+
+            <div class="value-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12,6 12,12 16,14"/>
+                        </svg>
+                    </div>
+                    <h3 class="value-title">节省时间</h3>
+                    <p class="value-text">自动化处理重复性工作，大幅提升运营效率，响应速度提升数倍</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="value-title">规范管理</h3>
+                    <p class="value-text">标准化客户管理流程，自动打标签分类，确保不遗漏任何客户</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="value-title">智能推送</h3>
+                    <p class="value-text">基于AI的智能化内容推送，提高客户活跃度和互动率</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Enterprise WeChat -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">企业微信方案</h2>
+                <p class="section-desc">基于腾讯官方API，稳定合规的首选方案</p>
+            </div>
+
+            <div class="feature-intro">
+                <h2>什么是企业微信？</h2>
+                <p>企业微信是腾讯官方推出的企业级通讯工具，与个人微信互通。它提供官方API接口，支持自动化管理，且不会封号。</p>
+            </div>
+
+            <div class="feature-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 18%;">功能模块</th>
+                            <th style="width: 42%;">说明</th>
+                            <th style="width: 40%;">示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="feature-name">自动加好友</span></td>
+                            <td>生成获客二维码，客户扫码自动添加</td>
+                            <td>线上推广、线下活动快速积累客户</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">自动欢迎语</span></td>
+                            <td>新客户添加后立即发送欢迎消息</td>
+                            <td>"您好！很高兴认识您，有任何问题随时联系我"</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">自动标签</span></td>
+                            <td>根据来源自动打标签分类</td>
+                            <td>来自不同活动的客户自动归类</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">关键词回复</span></td>
+                            <td>客户发送特定关键词，自动回复对应内容</td>
+                            <td>客户发"价格"→自动回复价目表</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">定时群发</span></td>
+                            <td>定时向客户推送内容</td>
+                            <td>每周一早上9点推送本周精选</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">群内自动回复</span></td>
+                            <td>客户在群里@小助手，自动回复</td>
+                            <td>FAQ、常见问题24小时自动解答</td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">智能助手</span></td>
+                            <td>用自然语言控制自动化流程</td>
+                            <td>"给所有VIP客户发送新品通知"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="highlight-box">
+                <h3>优势特点</h3>
+                <ul>
+                    <li><strong>官方合规</strong> — 使用腾讯官方API，永不封号</li>
+                    <li><strong>稳定可靠</strong> — 企业级服务，7×24小时运行</li>
+                    <li><strong>操作简单</strong> — 配置好后自动运行，大部分操作无需人工介入</li>
+                    <li><strong>数据安全</strong> — 客户资料本地存储，安全可控</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 3: Personal WeChat -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">个人微信方案</h2>
+                <p class="section-desc">基于第三方软件，功能灵活的备选方案</p>
+            </div>
+
+            <div class="feature-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">功能模块</th>
+                            <th style="width: 45%;">说明</th>
+                            <th style="width: 30%;">状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="feature-name">自动欢迎语</span></td>
+                            <td>新客户添加后自动回复</td>
+                            <td><span class="feature-tag">支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">关键词回复</span></td>
+                            <td>收到特定关键词自动回复</td>
+                            <td><span class="feature-tag">支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">定时群发</span></td>
+                            <td>定时向客户推送内容</td>
+                            <td><span class="feature-tag">支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">群内自动回复</span></td>
+                            <td>群里@小助手自动回复</td>
+                            <td><span class="feature-tag">支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">消息管理</span></td>
+                            <td>客户消息记录存档</td>
+                            <td><span class="feature-tag">支持</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="feature-name">自动加好友</span></td>
+                            <td>自动批量添加好友</td>
+                            <td><span class="feature-tag warning">不支持</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="max-width: var(--content-width); margin: var(--space-xl) auto 0; padding: var(--space-lg); background: var(--bg-tertiary); border-radius: 12px; font-size: 0.9375rem; color: var(--text-secondary);">
+                <strong style="color: var(--text-primary);">说明：</strong>个人微信平台限制，不支持自动批量添加好友功能。如需此功能，请选择企业微信方案。
+            </p>
+
+            <div style="max-width: var(--content-width); margin: var(--space-2xl) auto 0;">
+                <h3 style="font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-lg);">风险提示</h3>
+                <div class="risk-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 30%;">风险类型</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="risk-name">封号风险</span></td>
+                                <td>使用第三方软件存在被封号的可能性</td>
+                            </tr>
+                            <tr>
+                                <td><span class="risk-name">维护成本</span></td>
+                                <td>微信版本更新可能导致功能失效</td>
+                            </tr>
+                            <tr>
+                                <td><span class="risk-name">稳定性</span></td>
+                                <td>不如官方API稳定</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Comparison -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">方案对比</h2>
+                <p class="section-desc">一目了然，选择最适合您的方案</p>
+            </div>
+
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>对比项</th>
+                            <th>企业微信方案</th>
+                            <th>个人微信方案</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>合规性</strong></td>
+                            <td><span class="check">✓ 官方合规，零风险</span></td>
+                            <td><span class="cross">⚠ 存在封号风险</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>稳定性</strong></td>
+                            <td><span class="check">✓ 企业级稳定</span></td>
+                            <td><span class="cross">⚠ 可能受微信更新影响</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>使用门槛</strong></td>
+                            <td>需要企业微信（已认证更完整）</td>
+                            <td>个人微信即可</td>
+                        </tr>
+                        <tr>
+                            <td><strong>核心功能</strong></td>
+                            <td><span class="check">✓ 自动加好友、欢迎语、群发等全部支持</span></td>
+                            <td><span class="cross">⚠ 部分功能受限（不支持自动加好友）</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>维护成本</strong></td>
+                            <td><span class="check">✓ 低</span></td>
+                            <td><span class="cross">⚠ 需跟进微信版本</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>推荐程度</strong></td>
+                            <td><span class="recommended">⭐⭐⭐⭐⭐ 强烈推荐</span></td>
+                            <td><span class="backup">⭐⭐ 备选</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Section 5: FAQ -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2 class="section-title">常见问题</h2>
+                <p class="section-desc">快速解答您的疑问</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">每天能发多少消息？</div>
+                    <div class="faq-answer">
+                        <p><strong>企业微信限制：</strong></p>
+                        <ul>
+                            <li>群发消息：同一客户每天最多收到4条群发消息</li>
+                            <li>系统内置频率控制，避免触发风控</li>
+                        </ul>
+                        <p><strong>超出限制怎么办？</strong></p>
+                        <ul>
+                            <li>系统自动排队，分时段发送</li>
+                            <li>内容多样化，避免触发风控</li>
+                            <li>系统自动调控发送节奏</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">会被封号吗？</div>
+                    <div class="faq-answer">
+                        <ul>
+                            <li><strong>企业微信方案</strong>：不会。使用官方API接口，完全合规。</li>
+                            <li><strong>个人微信方案</strong>：存在一定封号风险。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">需要准备什么？</div>
+                    <div class="faq-answer">
+                        <p><strong>企业微信方案：</strong>企业微信账号</p>
+                        <p><strong>个人微信方案：</strong>电脑、微信PC客户端、个人微信账号</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">企业微信方案是否需要认证？</div>
+                    <div class="faq-answer">
+                        <ul>
+                            <li><strong>基础功能</strong>（欢迎语、关键词回复、定时群发）：已开通企业微信即可使用</li>
+                            <li><strong>自动加好友</strong>（创建"联系我"二维码）：需要完成企业认证</li>
+                        </ul>
+                        <p>建议在采购前确认所需功能是否需要认证</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">数据存在哪里？</div>
+                    <div class="faq-answer">
+                        <p>本地服务器/云服务器，数据库由您自己掌控，不经过第三方。</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">能对接我们的现有系统吗？</div>
+                    <div class="faq-answer">
+                        <p>可以。系统支持两种对接方式：</p>
+                        <ul>
+                            <li><strong>标准API接口</strong>：与现有CRM、ERP等系统对接</li>
+                            <li><strong>智能助手</strong>：用自然语言指令控制自动化流程</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">智能助手是什么？</div>
+                    <div class="faq-answer">
+                        <p>智能助手是基于AI大模型的能力，可以用自然语言来操作微信自动化。无需学习复杂操作，说句话就能完成。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Services -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2 class="section-title">服务内容</h2>
+                <p class="section-desc">一站式解决方案，省心省力</p>
+            </div>
+
+            <div class="service-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20h9"/>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-name">系统部署</h3>
+                    <p class="service-desc">在您的服务器上安装配置整套系统</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-name">功能定制</h3>
+                    <p class="service-desc">根据业务需求调整自动化流程</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-name">培训支持</h3>
+                    <p class="service-desc">提供使用培训和技术文档</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-name">持续维护</h3>
+                    <p class="service-desc">定期更新，保证系统稳定运行</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: Contact -->
+        <section class="section contact-section">
+            <div class="section-header" style="text-align: center;">
+                <h2 class="section-title">联系我们</h2>
+                <p class="section-desc">如有任何问题或需要进一步演示，欢迎随时联系</p>
+                <a href="#" class="contact-cta">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    立即咨询
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>方案设计者：<strong>墨飞科技</strong> | 本方案专为满足中小型企业微信运营需求设计</p>
+        </footer>
+    </div>
+</body>
+</html>
