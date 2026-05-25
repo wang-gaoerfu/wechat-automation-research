@@ -1,7 +1,7 @@
 """配置管理模块"""
 import os
 from functools import lru_cache
-from typing import Optional
+from typing import Optional, List
 
 import yaml
 from pydantic import BaseModel
@@ -21,6 +21,34 @@ class DatabaseConfig(BaseModel):
     url: str = "sqlite:///./wechat.db"
 
 
+class LLMConfig(BaseModel):
+    """LLM 大模型配置"""
+    provider: str = "openai"  # openai, claude, ollama
+    api_key: str = ""
+    base_url: str = ""
+    model: str = "gpt-4o-mini"
+    temperature: float = 0.7
+    max_tokens: int = 2000
+
+
+class RAGConfig(BaseModel):
+    """RAG 知识库配置"""
+    enabled: bool = False
+    embedding_provider: str = "openai"  # openai, ollama
+    embedding_api_key: str = ""
+    embedding_base_url: str = ""
+    collection_name: str = "knowledge_base"
+    persist_directory: str = "./data/chromadb"
+    similarity_threshold: float = 0.5
+
+
+class AgentConfig(BaseModel):
+    """Agent 智能助手配置"""
+    enabled: bool = False
+    use_rag: bool = True
+    system_prompt: str = ""
+
+
 class AppConfig(BaseModel):
     """应用配置"""
     host: str = "0.0.0.0"
@@ -32,6 +60,9 @@ class Config(BaseModel):
     """统一配置类"""
     wechat: WechatConfig = WechatConfig()
     database: DatabaseConfig = DatabaseConfig()
+    llm: LLMConfig = LLMConfig()
+    rag: RAGConfig = RAGConfig()
+    agent: AgentConfig = AgentConfig()
     app: AppConfig = AppConfig()
 
 
@@ -48,6 +79,12 @@ def _load_yaml_config() -> Config:
                     config.wechat = WechatConfig(**yaml_data["wechat"])
                 if "database" in yaml_data:
                     config.database = DatabaseConfig(**yaml_data["database"])
+                if "llm" in yaml_data:
+                    config.llm = LLMConfig(**yaml_data["llm"])
+                if "rag" in yaml_data:
+                    config.rag = RAGConfig(**yaml_data["rag"])
+                if "agent" in yaml_data:
+                    config.agent = AgentConfig(**yaml_data["agent"])
                 if "app" in yaml_data:
                     config.app = AppConfig(**yaml_data["app"])
 
@@ -67,6 +104,24 @@ def _load_env_config() -> Config:
 
     # 数据库配置
     config.database.url = os.getenv("DATABASE_URL", "sqlite:///./wechat.db")
+
+    # LLM 配置
+    config.llm.provider = os.getenv("LLM_PROVIDER", "openai")
+    config.llm.api_key = os.getenv("LLM_API_KEY", "")
+    config.llm.base_url = os.getenv("LLM_BASE_URL", "")
+    config.llm.model = os.getenv("LLM_MODEL", "gpt-4o-mini")
+
+    # RAG 配置
+    config.rag.enabled = os.getenv("RAG_ENABLED", "false").lower() == "true"
+    config.rag.embedding_provider = os.getenv("EMBEDDING_PROVIDER", "openai")
+    config.rag.embedding_api_key = os.getenv("EMBEDDING_API_KEY", "")
+    config.rag.embedding_base_url = os.getenv("EMBEDDING_BASE_URL", "")
+    config.rag.collection_name = os.getenv("RAG_COLLECTION", "knowledge_base")
+    config.rag.persist_directory = os.getenv("RAG_PERSIST_DIR", "./data/chromadb")
+
+    # Agent 配置
+    config.agent.enabled = os.getenv("AGENT_ENABLED", "false").lower() == "true"
+    config.agent.use_rag = os.getenv("AGENT_USE_RAG", "true").lower() == "true"
 
     # 应用配置
     config.app.host = os.getenv("APP_HOST", "0.0.0.0")
@@ -102,6 +157,18 @@ def get_config() -> Config:
 
     if not env_config.database.url or env_config.database.url == "sqlite:///./wechat.db":
         env_config.database.url = yaml_config.database.url
+
+    # LLM 配置合并
+    if not env_config.llm.api_key:
+        env_config.llm.api_key = yaml_config.llm.api_key
+    if not env_config.llm.model:
+        env_config.llm.model = yaml_config.llm.model
+    if not env_config.llm.provider:
+        env_config.llm.provider = yaml_config.llm.provider
+
+    # RAG 配置合并
+    if not env_config.rag.embedding_api_key:
+        env_config.rag.embedding_api_key = yaml_config.rag.embedding_api_key
 
     if env_config.app.host == "0.0.0.0":
         env_config.app.host = yaml_config.app.host

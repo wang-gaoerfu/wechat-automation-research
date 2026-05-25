@@ -11,6 +11,25 @@ anti_ban:
     start: 2
     end: 6
 
+# LLM 大模型配置
+llm:
+  provider: "sensenova"           # sensenova / openai / ollama
+  api_key: "YOUR_API_KEY"          # SenseNova API Key
+  base_url: ""                      # API 地址，不填则使用默认地址
+  model: "sensenova-6.7-flash-lite"  # 模型名称
+  temperature: 0.7
+  max_tokens: 2000
+
+# RAG 知识库配置
+rag:
+  enabled: true
+  embedding_provider: "sensenova"   # sensenova / openai / ollama
+  embedding_api_key: ""            # Embedding API Key（与 LLM API Key 相同）
+  embedding_base_url: ""            # Embedding API 地址
+  collection_name: "knowledge_base"
+  persist_directory: "./data/chromadb"
+  similarity_threshold: 0.5
+
 database:
   url: "sqlite:///./personal_wechat.db"
 

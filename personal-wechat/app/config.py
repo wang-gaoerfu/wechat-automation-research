@@ -29,6 +29,27 @@ class AntiBanConfig(BaseModel):
     rest_hours: RestHoursConfig = RestHoursConfig()
 
 
+class LLMConfig(BaseModel):
+    """LLM 大模型配置"""
+    provider: str = "sensenova"  # sensenova, openai, ollama
+    api_key: str = ""
+    base_url: str = ""
+    model: str = "sensenova-6.7-flash-lite"
+    temperature: float = 0.7
+    max_tokens: int = 2000
+
+
+class RAGConfig(BaseModel):
+    """RAG 知识库配置"""
+    enabled: bool = False
+    embedding_provider: str = "sensenova"
+    embedding_api_key: str = ""
+    embedding_base_url: str = ""
+    collection_name: str = "knowledge_base"
+    persist_directory: str = "./data/chromadb"
+    similarity_threshold: float = 0.5
+
+
 class DatabaseConfig(BaseModel):
     """Database configuration."""
     url: str = "sqlite:///./personal_wechat.db"
@@ -46,6 +67,8 @@ class Settings(BaseSettings):
     """Main settings class combining all configurations."""
     wcf: WCFConfig = WCFConfig()
     anti_ban: AntiBanConfig = AntiBanConfig()
+    llm: LLMConfig = LLMConfig()
+    rag: RAGConfig = RAGConfig()
     database: DatabaseConfig = DatabaseConfig()
     app: AppConfig = AppConfig()
 
@@ -56,15 +79,7 @@ class Settings(BaseSettings):
 
 
 def load_config_from_yaml(config_path: Optional[str] = None) -> Settings:
-    """Load configuration from YAML file.
-
-    Args:
-        config_path: Path to the YAML config file. If None, looks for config.yaml
-                    in the config directory relative to the project root.
-
-    Returns:
-        Settings object with loaded configuration.
-    """
+    """Load configuration from YAML file."""
     if config_path is None:
         config_dir = Path(__file__).parent.parent / "config"
         config_path = config_dir / "config.yaml"
@@ -83,6 +98,10 @@ def load_config_from_yaml(config_path: Optional[str] = None) -> Settings:
                 if "rest_hours" in ab_config:
                     ab_config["rest_hours"] = RestHoursConfig(**ab_config["rest_hours"])
                 settings.anti_ban = AntiBanConfig(**ab_config)
+            if "llm" in yaml_config:
+                settings.llm = LLMConfig(**yaml_config["llm"])
+            if "rag" in yaml_config:
+                settings.rag = RAGConfig(**yaml_config["rag"])
             if "database" in yaml_config:
                 settings.database = DatabaseConfig(**yaml_config["database"])
             if "app" in yaml_config:
@@ -97,7 +116,6 @@ def load_config_from_yaml(config_path: Optional[str] = None) -> Settings:
     if wcf_port:
         settings.wcf.port = int(wcf_port)
 
-    # Support more environment variable overrides
     reconnect_interval = os.getenv("WCF_RECONNECT_INTERVAL")
     if reconnect_interval:
         settings.wcf.reconnect_interval = int(reconnect_interval)
@@ -121,6 +139,32 @@ def load_config_from_yaml(config_path: Optional[str] = None) -> Settings:
     rest_end = os.getenv("ANTI_BAN_REST_END")
     if rest_end:
         settings.anti_ban.rest_hours.end = int(rest_end)
+
+    # LLM 配置
+    llm_provider = os.getenv("LLM_PROVIDER")
+    if llm_provider:
+        settings.llm.provider = llm_provider
+
+    llm_api_key = os.getenv("LLM_API_KEY")
+    if llm_api_key:
+        settings.llm.api_key = llm_api_key
+
+    llm_base_url = os.getenv("LLM_BASE_URL")
+    if llm_base_url:
+        settings.llm.base_url = llm_base_url
+
+    llm_model = os.getenv("LLM_MODEL")
+    if llm_model:
+        settings.llm.model = llm_model
+
+    # RAG 配置
+    rag_enabled = os.getenv("RAG_ENABLED")
+    if rag_enabled:
+        settings.rag.enabled = rag_enabled.lower() == "true"
+
+    rag_api_key = os.getenv("RAG_API_KEY")
+    if rag_api_key:
+        settings.rag.embedding_api_key = rag_api_key
 
     db_url = os.getenv("DATABASE_URL")
     if db_url:
